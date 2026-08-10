@@ -1,0 +1,20 @@
+{
+  "total_inventory_pages": 30000,
+  "actionable_pages_count": 1052,
+  "action_mix_breakdown": {
+    "monitor": 28948,
+    "optimize_title_ctr": 683,
+    "refresh_content": 162,
+    "refresh_and_expand": 129,
+    "expand_depth": 78
+  },
+  "human_review_breakdown": {
+    "NO_REVIEW: Automated monitoring": 26850,
+    "MANDATORY: Top-3 ranking URL": 1113,
+    "ROUTINE: Pre-update verification": 1036,
+    "MANDATORY: High traffic volume asset": 520,
+    "RECOMMENDED: Boundary prediction": 481
+  },
+  "precision_at_50_heldout_clients": 0.84,
+  "base_rate_heldout_clients": 0.525
+}
