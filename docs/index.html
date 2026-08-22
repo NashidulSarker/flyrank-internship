@@ -10,7 +10,7 @@
   <!-- Open Graph / Social Meta -->
   <meta property="og:type" content="article">
   <meta property="og:title" content="Predicting Search Traffic Decay and Prioritizing Content Refresh in Production SEO">
-  <meta property="og:description" content="Research paper evaluating machine learning priority scoring for content refreshes across 30,000 URLs and 32 client domains, achieving 84% Precision@50 on held-out clients.">
+  <meta property="og:description" content="FlyRank case study evaluating machine learning priority scoring for content refreshes across 30,000 URLs and 32 client domains, achieving 84% Precision@50 on held-out clients.">
   <meta property="og:url" content="https://nashidulsarker.github.io/flyrank-internship/">
 
   <!-- Google Fonts -->
@@ -592,6 +592,48 @@
       margin-bottom: 0.4rem;
     }
 
+    /* Demo & Shareable Boxes */
+    .share-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-color);
+      border-radius: 10px;
+      padding: 1.5rem;
+      margin: 1.25rem 0;
+      box-shadow: var(--card-shadow);
+    }
+
+    .share-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .share-card-title {
+      font-family: var(--font-display);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--text-main);
+    }
+
+    .copy-btn {
+      background: var(--bg-surface-subtle);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      font-size: 0.775rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: var(--accent-primary);
+      color: #ffffff;
+      border-color: var(--accent-primary);
+    }
+
     /* Footer */
     .paper-footer {
       margin-top: 5rem;
@@ -651,11 +693,12 @@
       <div class="nav-actions">
         <ul class="nav-links">
           <li><a href="#abstract">Abstract</a></li>
+          <li><a href="#introduction">Case Study</a></li>
           <li><a href="#data">Data</a></li>
           <li><a href="#methodology">Methodology</a></li>
           <li><a href="#results">Results</a></li>
           <li><a href="#playbook">Playbook</a></li>
-          <li><a href="#reproducibility">Reproducibility</a></li>
+          <li><a href="#showcase">Demo & Share</a></li>
         </ul>
         <button class="theme-toggle" id="themeToggle" aria-label="Toggle Theme">
           <span id="themeIcon">🌙</span> <span id="themeLabel">Dark</span>
@@ -669,14 +712,14 @@
     <!-- Paper Header -->
     <header class="paper-header">
       <div class="paper-meta-track">
-        <span>Research Paper</span> • <span>Lane 2: Content Refresh & Opportunity Scoring</span> • <span>March 2026</span>
+        <span>Research Paper & Production Case Study</span> • <span>Lane 2: Content Refresh Scoring</span> • <span>March 2026</span>
       </div>
       <h1 class="paper-title">Predicting Search Traffic Decay and Prioritizing Content Refresh in Production SEO: A Machine Learning Decision-Support Framework on 79M Query Logs</h1>
       
       <div class="paper-authors">
         <div class="author-item">
           <span class="author-name">Nashidul Sarker</span>
-          <span class="author-affiliation">FlyRank ML Research Internship · Capstone Track</span>
+          <span class="author-affiliation">FlyRank ML Research Internship · Capstone Production Track</span>
         </div>
       </div>
 
@@ -691,8 +734,8 @@
         <a href="https://flyrank.ai/" class="badge-btn" target="_blank" rel="noopener noreferrer">
           🌐 Built on FlyRank Dataset
         </a>
-        <a href="#playbook" class="badge-btn">
-          📋 Content Action Playbook
+        <a href="#showcase" class="badge-btn">
+          🎙️ 5-Min Demo & Social Cuts
         </a>
       </div>
     </header>
@@ -728,27 +771,31 @@
         Abstract
       </h2>
       <p>
-        Digital publishing and enterprise search optimization teams face severe editorial capacity constraints, forcing editors to manually guess which decaying articles warrant immediate content refreshes. Using an anonymized multi-client dataset of 30,000 production content URLs across 32 client portfolios extracted from FlyRank's 79-million-row search intelligence warehouse, we investigate the predictability of search traffic decay over trailing 90-day performance windows. We construct a 19-feature non-leaking predictive pipeline and benchmark machine learning classifiers against a composite rule baseline under an honest client-holdout split (80% train / 20% unseen test clients). Gradient Boosting achieves <strong>84.0% Precision@50</strong> on held-out client portfolios compared to a <strong>52.5% unguided base rate</strong> and 44.0% for the baseline rule (a 1.60× precision lift, Average Precision 0.683, ROC-AUC 0.690). We operationalize these probabilities into a structured Content Action Playbook featuring five distinct decision archetypes, reason codes, explicit human-review boundaries, and a strict No-Go list to optimize weekly editorial throughput without autonomous publishing risk.
+        Digital publishing platforms and enterprise SEO operations face severe human editorial capacity constraints: automated audits surface thousands of potential content refresh flags across client portfolios, yet editorial teams can manually rewrite only 20 to 50 articles per week. Using an anonymized multi-client dataset of 30,000 production content URLs across 32 client portfolios extracted from FlyRank's 79-million-row search intelligence warehouse, we formulate content refresh prioritization as a <strong>machine learning decision-support ranking task</strong>. We construct a 19-feature non-leaking predictive pipeline and benchmark machine learning classifiers against a composite rule baseline under an honest client-holdout split (80% train / 20% unseen test clients). Gradient Boosting achieves <strong>84.0% Precision@50</strong> on held-out client portfolios compared to a <strong>52.5% unguided base rate</strong> and 44.0% for the baseline rule (a 1.60× precision lift, Average Precision 0.683, ROC-AUC 0.690). We operationalize these probabilities into a structured Content Action Playbook featuring five distinct decision archetypes, reason codes, explicit human-review boundaries, and a strict No-Go list to optimize weekly editorial throughput without autonomous publishing risk.
       </p>
     </section>
 
-    <!-- Section 2: Introduction / Problem Statement -->
+    <!-- Section 2: Introduction / Case Study Statement -->
     <section class="paper-section" id="introduction">
       <h2 class="section-title">
-        <span class="section-num">1</span> Introduction & Problem Statement
+        <span class="section-num">1</span> Introduction & The FlyRank Case Study
       </h2>
       <p>
-        In modern enterprise digital publishing, maintaining long-term organic search performance requires continuous content maintenance. High-ranking articles inevitably experience search visibility decay due to competitor keyword expansion, evolving user search intent, outdated factual references, and Google SERP layout shifts. However, content editorial capacity is strictly bottlenecked: an experienced human copywriter or SEO editor can thoroughly audit, update, and rewrite only 20 to 50 URLs per week across a portfolio containing tens of thousands of published articles.
+        In modern enterprise search optimization and digital publishing, maintaining long-term organic search performance requires continuous content maintenance. High-ranking articles inevitably experience search visibility decay due to competitor keyword expansion, evolving user search intent, outdated factual references, and Google SERP layout shifts.
       </p>
+      
+      <div class="callout callout-info">
+        <div class="callout-title">🏢 The FlyRank Production Dilemma</div>
+        <p style="margin-bottom: 0.5rem;">
+          At <strong>FlyRank</strong>, the search intelligence engine monitors tens of thousands of published articles across client domains. Automated auditing flags thousands of candidate URLs each month. However, an editorial squad or agency team has the manual capacity to audit, research, and update only <strong>20 to 50 URLs per week</strong>.
+        </p>
+        <p style="margin-bottom: 0;">
+          Relying on blunt rules (such as auditing every URL exceeding 90 days since last publication) produces heavy operational waste: spending ~$25 (0.5 editor hours) per URL rewriting stable evergreen content, while failing to detect high-value, steadily decaying URLs before organic impressions collapse.
+        </p>
+      </div>
+
       <p>
-        Historically, editorial teams prioritize content refresh queues using unguided intuition or coarse heuristics, such as auditing every URL exceeding 90 days since last publication. These blunt rules produce heavy operational inefficiencies:
-      </p>
-      <ul>
-        <li><strong>Cost of False Positives:</strong> Approximately $25 (~0.5 editor hours) per article wasted rewriting stable evergreen articles that already satisfy user search intent, yielding zero incremental traffic recovery.</li>
-        <li><strong>Cost of False Negatives:</strong> Failure to detect high-value, decaying articles until organic impressions collapse, causing steep drops in qualified organic search traffic and downstream revenue.</li>
-      </ul>
-      <p>
-        This research formulates content refresh prioritization as a <strong>machine learning decision-support ranking task</strong>. By predicting the probability of traffic decay on trailing performance indicators and ranking the top 50 candidates each week, we maximize the traffic recovery yield per editor hour worked.
+        This research formulates content refresh prioritization as an empirical <strong>decision-support ranking task</strong>. By predicting the probability of traffic decay on trailing performance indicators and ranking the top 50 candidates each week, we maximize the organic traffic recovery yield per editor hour worked.
       </p>
     </section>
 
@@ -981,7 +1028,7 @@
         <span class="section-num">6</span> Ranked Recommendations (Content Action Playbook)
       </h2>
       <p>
-        To make predictions operational, continuous model risk probabilities ($60\%$) and baseline scores ($40\%$) are combined into a composite <strong>Playbook Score</strong>. Every URL in the inventory is categorized into five actionable decision archetypes:
+        To make predictions operational, continuous model risk probabilities (60%) and baseline scores (40%) are combined into a composite <strong>Playbook Score</strong>. Every URL in the inventory is categorized into five actionable decision archetypes:
       </p>
 
       <div class="table-container">
@@ -1089,7 +1136,60 @@ python -m jupyter execute work/notebooks/capstone.ipynb</code></pre>
       </p>
     </section>
 
-    <!-- Section 9: Acknowledgments & Data Credit -->
+    <!-- Section 9: 5-Minute Demo Outline & Shareable Cuts -->
+    <section class="paper-section" id="showcase">
+      <h2 class="section-title">
+        <span class="section-num">8</span> Showcase Demo & Shareable Cuts
+      </h2>
+      <p>
+        Structured assets for presenting this research to hiring managers, executive stakeholders, and the data science community:
+      </p>
+
+      <div class="share-card">
+        <div class="share-card-header">
+          <span class="share-card-title">🎙️ 5-Minute Presentation Outline (Week 8 Showcase)</span>
+        </div>
+        <ol style="margin-left: 1.25rem; font-size: 0.925rem;">
+          <li><strong>Minute 1 (The Problem):</strong> Highlight the FlyRank editorial bottleneck—thousands of flagged URLs vs 50 reviews/week. Explain $25/URL waste from blunt 90-day staleness rules.</li>
+          <li><strong>Minute 2 (The Data & Integrity):</strong> 30k URLs across 32 clients from 79M warehouse rows. Emphasize why grouped Client-Holdout validation prevents domain leakage.</li>
+          <li><strong>Minute 3 (The Result & Chart):</strong> Showcase Figure 1 (Precision@50). Gradient Boosting achieves <strong>84.0% Precision@50</strong> vs 52.5% base rate and 44.0% rule baseline (+31.5% lift).</li>
+          <li><strong>Minute 4 (The Skeptic's Catch):</strong> Present the thin-content surprise (short articles decay at only 20.7% vs 59.7% for long-form) and non-causal decision-support limits.</li>
+          <li><strong>Minute 5 (The Action Playbook):</strong> Demonstrate the 5-archetype queue (Figure 2) isolating the top 3.5% actionable URLs and enforcing strict No-Go protections on top-3 ranking assets.</li>
+        </ol>
+      </div>
+
+      <div class="share-card">
+        <div class="share-card-header">
+          <span class="share-card-title">📱 Methodology Social Post (LinkedIn / X)</span>
+          <button class="copy-btn" onclick="copyText('socialPostText', this)">Copy Post</button>
+        </div>
+        <pre id="socialPostText"><code>🔍 How we doubled content refresh precision on 79M production search rows:
+
+Most SEO teams rely on arbitrary staleness rules (e.g. "refresh every article older than 90 days"). Across 30,000 production URLs, we discovered this blunt heuristic achieves only 44.0% Precision@50 on held-out client domains—actually worse than the unguided 52.5% base rate—wasting hundreds of editor hours on stable evergreen content.
+
+By engineering 19 pre-decision search visibility & engagement signals and training a Gradient Boosting priority ranker evaluated strictly under an honest Client-Holdout Split (testing on completely unobserved client portfolios), our model achieves 84.0% Precision@50 (+31.5% lift over base rate, 0.690 ROC-AUC).
+
+Rather than handing editors raw probabilities, we operationalized predictions into a human-in-the-loop Content Action Playbook featuring 5 discrete decision archetypes, reason codes, and strict No-Go safeguards for protected Top-3 ranking assets.
+
+📄 Live Research Paper: https://nashidulsarker.github.io/flyrank-internship/
+💻 GitHub Repo & Notebooks: https://github.com/NashidulSarker/flyrank-internship
+🌐 Built on the FlyRank ML Internship dataset (https://flyrank.ai/)</code></pre>
+      </div>
+
+      <div class="share-card">
+        <div class="share-card-header">
+          <span class="share-card-title">💼 Employer-Facing 3-Sentence Summary</span>
+          <button class="copy-btn" onclick="copyText('employerSummaryText', this)">Copy Summary</button>
+        </div>
+        <div id="employerSummaryText" style="font-size: 0.925rem; line-height: 1.7; background: var(--bg-surface-subtle); padding: 1rem; border-radius: 6px; border: 1px solid var(--border-color);">
+          <p style="margin-bottom: 0.5rem;"><strong>What I Built:</strong> A machine learning decision-support ranking system and operational Content Action Playbook that prioritizes weekly content refresh queues for digital publishing and SEO teams.</p>
+          <p style="margin-bottom: 0.5rem;"><strong>On What Data:</strong> Evaluated on 30,000 unique content URLs across 32 client domains extracted from FlyRank's 79-million-row production search intelligence warehouse with zero target leakage.</p>
+          <p style="margin-bottom: 0;"><strong>What It Showed:</strong> Gradient Boosting achieved <strong>84.0% Precision@50</strong> on unobserved client holdouts (vs a 52.5% random base rate and 44.0% rule baseline, delivering a 1.60× precision lift), successfully isolating the top 3.5% actionable inventory while enforcing strict No-Go protections on core ranking assets.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Section 10: Acknowledgments & Data Credit -->
     <footer class="paper-footer" id="acknowledgments">
       <div class="data-credit-box">
         <p style="font-size: 1.1rem; font-weight: 600; color: var(--text-main); margin-bottom: 0.5rem;">
@@ -1112,7 +1212,7 @@ python -m jupyter execute work/notebooks/capstone.ipynb</code></pre>
 
   </main>
 
-  <!-- Interactive JavaScript: Theme Toggle & Smooth Scroll -->
+  <!-- Interactive JavaScript: Theme Toggle & Copy Helpers -->
   <script>
     // Theme Toggle Functionality
     const themeToggleBtn = document.getElementById('themeToggle');
@@ -1131,7 +1231,6 @@ python -m jupyter execute work/notebooks/capstone.ipynb</code></pre>
       }
     }
 
-    // Detect system preference or saved theme
     const savedTheme = localStorage.getItem('flyrank_theme');
     if (savedTheme) {
       setTheme(savedTheme);
@@ -1143,6 +1242,23 @@ python -m jupyter execute work/notebooks/capstone.ipynb</code></pre>
       const currentTheme = document.documentElement.getAttribute('data-theme') || 'light';
       setTheme(currentTheme === 'dark' ? 'light' : 'dark');
     });
+
+    // Copy helper
+    function copyText(elemId, btn) {
+      const el = document.getElementById(elemId);
+      const text = el.innerText || el.textContent;
+      navigator.clipboard.writeText(text).then(() => {
+        const origText = btn.textContent;
+        btn.textContent = 'Copied! ✓';
+        btn.style.background = '#059669';
+        btn.style.color = '#fff';
+        setTimeout(() => {
+          btn.textContent = origText;
+          btn.style.background = '';
+          btn.style.color = '';
+        }, 2000);
+      });
+    }
 
     // Smooth Scroll Navigation Offset handling
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
