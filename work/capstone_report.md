@@ -21,7 +21,7 @@ In digital publishing and enterprise SEO operations, managing large-scale conten
 ### Error Economics & Value of ML
 * **Cost of False Positives:** ~$25 (0.5 editor hours) per URL spent researching and rewriting evergreen content that was already stable, yielding zero incremental traffic recovery.
 * **Cost of False Negatives:** Missed opportunity to rescue high-authority, revenue-driving URLs from steady search decay, resulting in cumulative loss of organic visibility and conversion revenue.
-* **Value of ML:** Machine learning captures multi-feature non-linear interactions (e.g., search presence consistency $\times$ position tier $\times$ staleness), elevating precision among top-priority recommendations far above arbitrary rules.
+* **Value of ML:** Machine learning captures multi-feature non-linear interactions (e.g., search presence consistency × position tier × staleness), elevating precision among top-priority recommendations far above arbitrary rules.
 
 ---
 
@@ -45,18 +45,18 @@ To prevent circular logic and target leakage:
 ### Heuristic Rule Design
 We established a transparent, non-leaking heuristic baseline score combining four normalized dimensions:
 $$\text{Baseline Score} = 0.40 \cdot \text{Visibility} + 0.30 \cdot \text{Freshness Risk} + 0.20 \cdot \text{Position Risk} + 0.10 \cdot \text{CTR Gap}$$
-* **Visibility Score:** Percentile rank of log-transformed 90-day impressions ($\log(1 + \text{impressions\_90d})$).
+* **Visibility Score:** Percentile rank of log-transformed 90-day impressions (`log(1 + impressions_90d)`).
 * **Freshness Risk Score:** Percentile rank of days since last update (`days_since_last_update`).
-* **Position Risk Score:** Risk penalty for URLs in Page 1 and striking distance positions ($1 \le \text{avg\_position} \le 20$).
-* **CTR Gap Score:** Penalty for URLs with below-median CTR despite substantial impression demand ($\ge 100$ impressions).
+* **Position Risk Score:** Risk penalty for URLs in Page 1 and striking distance positions (average position between 1 and 20 via `avg_position`).
+* **CTR Gap Score:** Penalty for URLs with below-median CTR despite substantial impression demand (&ge; 100 impressions).
 
 ### Baseline Performance on Held-Out Test Clients
-* **Base Rate (Decline Rate):** $52.50\%$ ($0.5250$)
-* **Precision@20:** $0.4000$ ($40.0\%$)
-* **Precision@50:** $0.4400$ ($44.0\%$)
-* **Precision@100:** $0.4900$ ($49.0\%$)
-* **Average Precision (AP):** $0.5505$
-* **ROC-AUC:** $0.5689$
+* **Base Rate (Decline Rate):** 52.50% (0.5250)
+* **Precision@20:** 0.4000 (40.0%)
+* **Precision@50:** 0.4400 (44.0%)
+* **Precision@100:** 0.4900 (49.0%)
+* **Average Precision (AP):** 0.5505
+* **ROC-AUC:** 0.5689
 
 *Why the baseline struggles:* Heuristic rules over-penalize age alone, mistakenly flagging high-authority evergreen content that remains stable, while missing active decay in volatile mid-position URLs.
 
@@ -82,23 +82,23 @@ We evaluated four candidate models from our toolkit against the baseline:
 
 ### Validation Strategy: Client-Holdout Split
 To simulate true production deployment—where models prioritize queues for new, unseen client domains—we utilized a **Client-Holdout Split** (80% train clients, 20% test clients):
-* **Train Set:** 26 client portfolios ($n=26,619$ URLs | Base rate: $54.42\%$)
-* **Test Set:** 6 held-out client portfolios ($n=3,381$ URLs | Base rate: $52.50\%$)
+* **Train Set:** 26 client portfolios (n = 26,619 URLs | Base rate: 54.42%)
+* **Test Set:** 6 held-out client portfolios (n = 3,381 URLs | Base rate: 52.50%)
 
 ### Model vs Baseline Comparison Table (Held-Out Test Clients)
 
 | Model Strategy | Base Rate | Precision@20 | Precision@50 | Precision@100 | Average Precision (AP) | ROC-AUC | Lift over Base Rate (P@50) |
 |---|---|---|---|---|---|---|---|
-| **Baseline (Rule)** | 0.5250 | 0.4000 | 0.4400 | 0.4900 | 0.5505 | 0.5689 | $-16.2\%$ |
-| **Logistic Regression** | 0.5250 | 0.8000 | 0.6800 | 0.7000 | 0.6193 | 0.6162 | $+29.5\%$ |
-| **Decision Tree ($d=5$)** | 0.5250 | 0.5500 | 0.6600 | 0.6600 | 0.6258 | 0.6565 | $+25.7\%$ |
-| **Random Forest ($n=100$)** | 0.5250 | 0.4000 | 0.3600 | 0.4300 | 0.6252 | 0.6646 | $-31.4\%$ |
-| **Gradient Boosting ($n=100$)** | **0.5250** | **0.8500** | **0.8400** | **0.7600** | **0.6829** | **0.6901** | **+60.0% (1.60×)** |
+| **Baseline (Rule)** | 0.5250 | 0.4000 | 0.4400 | 0.4900 | 0.5505 | 0.5689 | -16.2% |
+| **Logistic Regression** | 0.5250 | 0.8000 | 0.6800 | 0.7000 | 0.6193 | 0.6162 | +29.5% |
+| **Decision Tree (d=5)** | 0.5250 | 0.5500 | 0.6600 | 0.6600 | 0.6258 | 0.6565 | +25.7% |
+| **Random Forest (n=100)** | 0.5250 | 0.4000 | 0.3600 | 0.4300 | 0.6252 | 0.6646 | -31.4% |
+| **Gradient Boosting (n=100)** | **0.5250** | **0.8500** | **0.8400** | **0.7600** | **0.6829** | **0.6901** | **+60.0% (1.60x)** |
 
 ### Error Analysis (3 Concrete Test Cases)
-1. **False Positive (`content_9b2575f9efdd`):** Predicted risk $81.2\%$, Actual label $0$. URL at striking position 11.4 with 1,612 impressions. Model expected decay, but a recent minor update 15 days prior stabilized performance.
-2. **False Negative (`content_06248e69dbfe`):** Predicted risk $10.6\%$, Actual label $1$. Top-5 position URL updated 20 days prior, but with tiny total volume ($n=2$ impressions). Measurement variance on low impressions triggered the percentage drop label.
-3. **Borderline Miss (`content_167c1e549117`):** Predicted risk $49.8\%$, Actual label $1$. Moderate search activity (4,210 impressions, pos 14.2) sat right on the decision boundary, experiencing decay from competitor keyword moves.
+1. **False Positive (`content_9b2575f9efdd`):** Predicted risk 81.2%, Actual label 0. URL at striking position 11.4 with 1,612 impressions. Model expected decay, but a recent minor update 15 days prior stabilized performance.
+2. **False Negative (`content_06248e69dbfe`):** Predicted risk 10.6%, Actual label 1. Top-5 position URL updated 20 days prior, but with tiny total volume (n = 2 impressions). Measurement variance on low impressions triggered the percentage drop label.
+3. **Borderline Miss (`content_167c1e549117`):** Predicted risk 49.8%, Actual label 1. Moderate search activity (4,210 impressions, pos 14.2) sat right on the decision boundary, experiencing decay from competitor keyword moves.
 
 ---
 
@@ -111,7 +111,7 @@ To simulate true production deployment—where models prioritize queues for new,
 4. **`impressions_90d` & `ctr`:** Establish demand scale and click efficiency.
 
 ### Negative & Surprising Results
-* **Word Count Counter-Intuition:** In our signal audit, thin articles (<1,000 words) showed an observed decline rate of only $20.7\%$, compared to $59.7\%$ for long-form articles (>3,500 words). Heuristic rules that automatically penalize short articles are heavily biased; thin content often serves focused navigational queries that rarely decay.
+* **Word Count Counter-Intuition:** In our signal audit, thin articles (<1,000 words) showed an observed decline rate of only 20.7%, compared to 59.7% for long-form articles (>3,500 words). Heuristic rules that automatically penalize short articles are heavily biased; thin content often serves focused navigational queries that rarely decay.
 
 ---
 
@@ -121,22 +121,22 @@ To simulate true production deployment—where models prioritize queues for new,
 
 | Archetype | Condition / Reason Code | Action Label | Editorial Action |
 |---|---|---|---|
-| **Stale High-Demand** | `high_model_risk_stale` (Prob $\ge 0.70$, Days $\ge 90$) | `refresh_content` | Fact-check, update statistics, refresh outdated sections |
-| **Striking Distance Decay** | `striking_distance_decay` (Prob $\ge 0.60$, Pos 10–25) | `refresh_and_expand` | Add missing subtopics to push URL to Page 1 |
-| **Underperforming CTR** | `ctr_underperformance` (Prob $\ge 0.60$, Pos $\le 20$, CTR $< 0.5\%$) | `optimize_title_ctr` | Rewrite title tag and meta snippet for CTR |
-| **Thin Visible Content** | `thin_content_gap` (Words $< 1,200$, Imps $\ge 250$) | `expand_depth` | Deepen content coverage for broader search intent |
+| **Stale High-Demand** | `high_model_risk_stale` (Prob >= 0.70, Days >= 90) | `refresh_content` | Fact-check, update statistics, refresh outdated sections |
+| **Striking Distance Decay** | `striking_distance_decay` (Prob >= 0.60, Pos 10–25) | `refresh_and_expand` | Add missing subtopics to push URL to Page 1 |
+| **Underperforming CTR** | `ctr_underperformance` (Prob >= 0.60, Pos <= 20, CTR < 0.5%) | `optimize_title_ctr` | Rewrite title tag and meta snippet for CTR |
+| **Thin Visible Content** | `thin_content_gap` (Words < 1,200, Imps >= 250) | `expand_depth` | Deepen content coverage for broader search intent |
 | **Stable / Low Risk** | `routine_monitoring` (All other inventory) | `monitor` | Retain in automated monitoring; no manual action |
 
 ### Mandatory Review Triggers & Strict NO-GO List
 * 🚫 **No Autonomous CMS Overwrites:** Direct LLM publishing to live URLs without human sign-off is prohibited.
-* 🚫 **Top-3 Ranking URLs (`avg_position` $\le 3.0$):** Protected core revenue assets (1,113 URLs in dataset). Require mandatory senior SEO review before edits.
-* 🚫 **High-Traffic Assets ($\ge 50,000$ imps):** Mandatory multi-stakeholder approval.
+* 🚫 **Top-3 Ranking URLs (`avg_position` <= 3.0):** Protected core revenue assets (1,113 URLs in dataset). Require mandatory senior SEO review before edits.
+* 🚫 **High-Traffic Assets (>= 50,000 imps):** Mandatory multi-stakeholder approval.
 * 🚫 **Seasonal Queries:** Holiday and event traffic dips must not trigger permanent content rewrites.
 
 ### Retraining & Drift Triggers
-* **Precision Drift:** Trigger retrain if human-verified Precision@50 drops below $70.0\%$.
+* **Precision Drift:** Trigger retrain if human-verified Precision@50 drops below 70.0%.
 * **Google Core Update:** Mandatory re-calibration 30 days following major core search algorithm updates.
-* **Feature Shift:** Re-scale normalization parameters if portfolio-wide mean staleness shifts by $>15\%$.
+* **Feature Shift:** Re-scale normalization parameters if portfolio-wide mean staleness shifts by > 15%.
 
 ---
 
